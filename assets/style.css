@@ -1,0 +1,43 @@
+* {
+    font-family: Verdana, sans-serif;
+}
+
+.navbar-brand {
+    font-size: 30px;
+    color: green;
+}
+
+.navbar-brand:hover {
+color: green;
+}
+
+h2 {
+    font-size: 25px;
+    color: green;
+    font-style: italic;
+    padding: 1%;
+}
+
+.list-group {
+    margin: 1%;
+}
+
+.list-group-item.active {
+    background-color: green;
+    border-color: green;
+}
+
+.footer {
+    position: relative;
+    width: 100%;
+    background-color: #d7ecd5;
+    font-size: 15px;
+    color: green;
+    text-align: center;
+    padding: 2%;
+    margin-top: 5%;
+}
+
+.footer h1 {
+    font-size: 30px;
+}
