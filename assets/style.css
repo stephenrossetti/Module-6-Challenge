@@ -11,6 +11,19 @@
 color: green;
 }
 
+#day1Img {
+    width: 10%;
+    height: 10%;
+}
+
+h5 {
+ font-size: 25px;
+}
+
+#Day1, #Day2, #Day3, #Day4, #Day5, #Day6 {
+    font-size: 25px;
+}
+
 h2 {
     font-size: 25px;
     color: green;
@@ -18,8 +31,19 @@ h2 {
     padding: 1%;
 }
 
+.results {
+    display: flex;
+    justify-content: center;
+}
+
 .list-group {
     margin: 1%;
+    width: 50%;
+}
+
+.list-group-item {
+    background-color:#d7ecd5;
+    border-color: green;
 }
 
 .list-group-item.active {
