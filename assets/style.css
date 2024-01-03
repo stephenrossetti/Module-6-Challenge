@@ -11,6 +11,10 @@
 color: green;
 }
 
+.btn-success {
+ margin-left: 1%;
+}
+
 #day1Img {
     width: 10%;
     height: 10%;

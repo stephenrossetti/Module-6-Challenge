@@ -24,16 +24,18 @@
             <div class="container-fluid">
                 <a class="navbar-brand"><b>Weather Dashboard</b></a>
                 <form class="d-flex" role="search">
-                  <input class="form-control me-2" type="search" placeholder="City Name" aria-label="Search">
+                  <input class="form-control me-2" id="cityInput" type="search" placeholder="City Name" aria-label="Search">
                   <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
               </div>
           </nav>
     </header>
 
-    <h2>5-Day Weather Forecast for <span id="result-text"></span></h2>
-    <div id="result-content"></div>
+    <h2>Saved Searches</h2>
+    <div id="SearchContainer"></div>
 
+    <h2>5-Day Weather Forecast for <span id="result-text"></span></h2>
+  
     <div class="results">
         <div class="list-group">
             <a href="#" class="list-group-item list-group-item-action active" aria-current="true">

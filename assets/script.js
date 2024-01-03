@@ -1,7 +1,35 @@
+// global variables //
 let apiKey = "15785ac3bfa5f8d614a115761164b031";
+let savedSearchList = [];
+
+// testing variables to hide when done//
 let testAPI = "https://api.openweathermap.org/data/2.5/forecast?lat=44.9772995&lon=-93.2654692&appid=15785ac3bfa5f8d614a115761164b031";
 let latitude = "44.9772995";
 let longetitude = "-93.2654692"
+
+// local storage and list for saved searches //
+
+let savedSearch = function(cityName) {
+    $('.btn btn-success:contains("'+ cityName + '")').remove();
+    
+    let SearchInput = $('<p>');
+    SearchInput.addClass('btn btn-success');
+    SearchInput.text(cityName);
+
+    let SearchContainer = $('.SearchContainer');
+    SearchContainer.append(SearchInput);
+
+    if (savedSearchList.length > 0) {
+        let previousSavedSearches = localStorage.getItem("savedSearches");
+        savedSearches = JSON.parse(previousSavedSearches);
+    }
+
+    savedSearches.push(cityName);
+    localStorage.setItem("savedSeaches", JSON.stringify(savedSearches));
+
+    $('#cityInput').val('');
+}
+
 
 let cityName = 'Minneapolis';
 let Day1 = dayjs().format('dddd, MM/DD/YYYY');
