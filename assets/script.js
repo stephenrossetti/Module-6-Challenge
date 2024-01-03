@@ -30,11 +30,10 @@ function searchHistoryInputs() {
 function searchHistory() {
     listContainer.empty();
     searchHistoryList.forEach(function (cityName) {
-        let listItem = $('<p>');
+        let listItem = $('<button>');
         listItem.addClass('btn btn-success');
         listItem.text(cityName);
         listContainer.append(listItem);
-
         listItem.on("click", function () {
             reset();
             forecastInput();
@@ -82,6 +81,7 @@ function forecastInput() {
             if (response.status != 200) {
                 console.log("Not a City!");
                 error();
+                searchHistoryList.pop();
             } else {
                 return response.json();
             }
