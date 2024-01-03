@@ -19,9 +19,7 @@ img {
     display: none;
 }
 
-#savedSearchesTitle {
-    display: none;
-}
+/* Display as none so it doesn't show up until there is an inccorect search */
 
 #incorrectCity {
     display: none;

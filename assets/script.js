@@ -1,15 +1,14 @@
 // global variables //
 let apiKey = "15785ac3bfa5f8d614a115761164b031";
-
-// testing variables to hide when done//
-// let testAPI = "https://api.openweathermap.org/data/2.5/forecast?lat=44.9772995&lon=-93.2654692&units=imperial&appid=15785ac3bfa5f8d614a115761164b031";
-
 let cityName = '';
 let cityURL = '';
 let listContainer = $('#SearchContainer');
 let searchHistoryList = JSON.parse(localStorage.getItem('searchHistory')) || [];
-// local storage and list for saved searches //
 
+// Testing API key and link to navgiate through API data. Use for testing purposes//
+// let testAPI = "https://api.openweathermap.org/data/2.5/forecast?lat=44.9772995&lon=-93.2654692&units=imperial&appid=15785ac3bfa5f8d614a115761164b031";
+
+// Create a function that the Saved Searches title only appears if there is saved data to append. Function will run on page load and after each search //
 function saveTitle () {
     if (searchHistoryList.length > 0) {
         document.getElementById("savedSearchesTitle").style.display = "block";
@@ -18,6 +17,7 @@ function saveTitle () {
 
 saveTitle ();
 
+// Set any new cityName (from click function) into the localStorage variavle and stringify the data. Then run the get localStorage function//
 function searchHistoryInputs() {
     if (!searchHistoryList.includes(cityName)) {
         searchHistoryList.push(cityName);
@@ -26,6 +26,7 @@ function searchHistoryInputs() {
     }
 }
 
+// Run the localStorage function to retrieve and append the cityName in saved searches container. Also, on click of saved data the weather function will run//
 function searchHistory() {
     listContainer.empty();
     searchHistoryList.forEach(function (cityName) {
@@ -41,8 +42,10 @@ function searchHistory() {
     })
 }
 
+// Run function on page load regardless if search bar is used. Previous data from previous search will be displayed//
 searchHistory();
 
+// Function for when the search button is pressed. Will create a new city name and also push that into URL for API. It will also save data into localStorage and reset the page if city is already inputted//
 $('#cityButton').on("click", function () {
     event.preventDefault();
     cityName = $('#cityInput').val();
@@ -55,21 +58,25 @@ $('#cityButton').on("click", function () {
     saveTitle();
 })
 
+// Function for error in city name. Will hide divs and add an error div//
 function error() {
     document.getElementById("incorrectCity").style.display = "block";
     document.getElementById("contentBlock").style.display = "none";
     document.getElementById("5dayfcst").style.display = "none";
 }
 
+// Resets page after each search if new city is selected//
 function reset() {
     document.getElementById("contentBlock").style.display = "block";
     document.getElementById("incorrectCity").style.display = "none";
     document.getElementById("5dayfcst").style.display = "block";
 }
 
-
+// Overall forecast function that will display the current and future weather for city selected//
+// Includes current city and that specific API URL as well as forecasted data in separated API URL//
+// Need to first use a city API URL to retrieve longetitude and latitude data//
+// When long and lat data are obtained to run OpenWeather API, append or add text dynamically for necessary data//
 function forecastInput() {
-
     fetch(cityURL)
         .then(function (response) {
             if (response.status != 200) {
@@ -95,6 +102,7 @@ function forecastInput() {
             $("#day1Img").attr('src', 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '.png');
         })
 
+        // Use for loop for multiple days//
     fetch(cityURL)
         .then(response => response.json())
         .then(data => {
@@ -126,7 +134,7 @@ function forecastInput() {
         });
 }
 
-// Variables and inputs for each day//
+// Variables and time inputs for each day//
 let Day1 = dayjs().format('dddd, MM/DD/YYYY');
 let Day2 = dayjs().add(1, 'day').format('dddd, MM/DD/YYYY');
 let Day3 = dayjs().add(2, 'day').format('dddd, MM/DD/YYYY');
@@ -141,6 +149,7 @@ $('#Day4').text(Day4);
 $('#Day5').text(Day5);
 $('#Day6').text(Day6);
 
+// Only display images when a city is selected//
 function imageDisplay() {
     document.getElementById("day1Img").style.display = "block";
     document.getElementById("day2Img").style.display = "block";
