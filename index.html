@@ -25,7 +25,7 @@
                 <a class="navbar-brand"><b>Weather Dashboard</b></a>
                 <form class="d-flex" role="search">
                   <input class="form-control me-2" id="cityInput" type="search" placeholder="City Name" aria-label="Search">
-                  <button class="btn btn-outline-success" type="submit">Search</button>
+                  <button class="btn btn-outline-success" id="cityButton" type="submit">Search</button>
                 </form>
               </div>
           </nav>
@@ -34,9 +34,10 @@
     <h2>Saved Searches</h2>
     <div id="SearchContainer"></div>
 
-    <h2>5-Day Weather Forecast for <span id="result-text"></span></h2>
+    <h2 id="5dayfcst">5-Day Weather Forecast for <span id="result-text">...</span></h2>
+    <h2 id="incorrectCity">Incorrect city name, or no city selected. Please try again.</h2>
   
-    <div class="results">
+    <div class="results" id="contentBlock">
         <div class="list-group">
             <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
               <div class="d-flex w-100 justify-content-between">

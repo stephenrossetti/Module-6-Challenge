@@ -15,6 +15,15 @@ color: green;
  margin-left: 1%;
 }
 
+img {
+    display: none;
+}
+
+#incorrectCity {
+    display: none;
+    color: red;
+}
+
 #day1Img {
     width: 10%;
     height: 10%;
