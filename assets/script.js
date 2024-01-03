@@ -1,6 +1,5 @@
 // global variables //
 let apiKey = "15785ac3bfa5f8d614a115761164b031";
-let savedSearchList = [];
 
 // testing variables to hide when done//
 // let testAPI = "https://api.openweathermap.org/data/2.5/forecast?lat=44.9772995&lon=-93.2654692&units=imperial&appid=15785ac3bfa5f8d614a115761164b031";
@@ -11,21 +10,20 @@ let listContainer = $('.SearchContainer');
 let searchHistoryList = JSON.parse(localStorage.getItem('searchHistory')) || [];
 // local storage and list for saved searches //
 
-function searchHistoryInputs (city) {
-    if (!searchHistoryList.includes(city)) {
-        searchHistoryList.push(city);
+function searchHistoryInputs () {
+    if (!searchHistoryList.includes(cityName)) {
+        searchHistoryList.push(cityName);
         localStorage.setItem('searchHistory',JSON.stringify(searchHistoryList));
         searchHistory();
     }
-
 } 
 
 function searchHistory (){
     listContainer.innerHTML = '';
-    searchHistoryList.forEach(function(city) {
+    searchHistoryList.forEach(function(cityName) {
     let listItem = $('<p>');
     listItem.addClass('btn btn-success');
-    listItem.text(city);
+    listItem.text(searchHistoryList);
 
     SearchContainer.append(listItem);
 
