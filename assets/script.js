@@ -6,53 +6,62 @@ let apiKey = "15785ac3bfa5f8d614a115761164b031";
 
 let cityName = '';
 let cityURL = '';
-let listContainer = $('.SearchContainer');
+let listContainer = $('#SearchContainer');
 let searchHistoryList = JSON.parse(localStorage.getItem('searchHistory')) || [];
 // local storage and list for saved searches //
 
-function searchHistoryInputs () {
+function saveTitle () {
+    if (searchHistoryList.length > 0) {
+        document.getElementById("savedSearchesTitle").style.display = "block";
+    }
+}
+
+saveTitle ();
+
+function searchHistoryInputs() {
     if (!searchHistoryList.includes(cityName)) {
         searchHistoryList.push(cityName);
-        localStorage.setItem('searchHistory',JSON.stringify(searchHistoryList));
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistoryList));
         searchHistory();
     }
-} 
+}
 
-function searchHistory (){
-    listContainer.innerHTML = '';
-    searchHistoryList.forEach(function(cityName) {
-    let listItem = $('<p>');
-    listItem.addClass('btn btn-success');
-    listItem.text(searchHistoryList);
+function searchHistory() {
+    listContainer.empty();
+    searchHistoryList.forEach(function (cityName) {
+        let listItem = $('<p>');
+        listItem.addClass('btn btn-success');
+        listItem.text(cityName);
+        listContainer.append(listItem);
 
-    SearchContainer.append(listItem);
-
-    listItem.on("click", function (){
-        reset();
-        forecastInput();
-    })
+        listItem.on("click", function () {
+            reset();
+            forecastInput();
+        })
     })
 }
 
-$('#cityButton').on("click", function() {
+searchHistory();
+
+$('#cityButton').on("click", function () {
     event.preventDefault();
     cityName = $('#cityInput').val();
-    cityURL = 'https://api.openweathermap.org/data/2.5/weather?q='+ cityName +'&appid='+ apiKey;
-    console.log(cityName);
+    cityURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityName + '&appid=' + apiKey;
     $('#result-text').text(cityName);
     reset();
     forecastInput();
     imageDisplay();
     searchHistoryInputs();
+    saveTitle();
 })
 
-function error(){
+function error() {
     document.getElementById("incorrectCity").style.display = "block";
     document.getElementById("contentBlock").style.display = "none";
     document.getElementById("5dayfcst").style.display = "none";
 }
 
-function reset(){
+function reset() {
     document.getElementById("contentBlock").style.display = "block";
     document.getElementById("incorrectCity").style.display = "none";
     document.getElementById("5dayfcst").style.display = "block";
@@ -61,63 +70,61 @@ function reset(){
 
 function forecastInput() {
 
-fetch(cityURL)
-.then(function (response) {
-    if(response.status != 200){
-        console.log("Not a City!");
-        error();
-    } else{
-        return response.json();
-    }
-})
-.then(data => {
-    let longetitude = data.coord.lon;
-    let latitude = data.coord.lat;
-    let currentURL = 'https://api.openweathermap.org/data/2.5/weather?lat='+latitude+'&lon='+longetitude+'&units=imperial&appid='+apiKey;
-    return fetch(currentURL);
-})
-.then(response => response.json())
-.then(data => {
-        $("#day1Hum").text("Humidity: " + Number(data.main.humidity) + "%");   
-        $("#day1Wind").text("Wind Speed: " + Number(data.wind.speed).toFixed(0) + "MPH");   
-        $("#day1Min").text("Min: " + Number(data.main.temp_min).toFixed(1) + "°F");   
-        $("#day1Max").text("Max: " + Number(data.main.temp_max).toFixed(1) + "°F");   
-        $("#day1Weather").text(data.weather[0].main + ': ');
-        $("#day1Img").attr('src','http://openweathermap.org/img/wn/'+ data.weather[0].icon + '.png');
-})
+    fetch(cityURL)
+        .then(function (response) {
+            if (response.status != 200) {
+                console.log("Not a City!");
+                error();
+            } else {
+                return response.json();
+            }
+        })
+        .then(data => {
+            let longetitude = data.coord.lon;
+            let latitude = data.coord.lat;
+            let currentURL = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitude + '&lon=' + longetitude + '&units=imperial&appid=' + apiKey;
+            return fetch(currentURL);
+        })
+        .then(response => response.json())
+        .then(data => {
+            $("#day1Hum").text("Humidity: " + Number(data.main.humidity) + "%");
+            $("#day1Wind").text("Wind Speed: " + Number(data.wind.speed).toFixed(0) + "MPH");
+            $("#day1Min").text("Min: " + Number(data.main.temp_min).toFixed(1) + "°F");
+            $("#day1Max").text("Max: " + Number(data.main.temp_max).toFixed(1) + "°F");
+            $("#day1Weather").text(data.weather[0].main + ': ');
+            $("#day1Img").attr('src', 'http://openweathermap.org/img/wn/' + data.weather[0].icon + '.png');
+        })
 
-fetch(cityURL)
-.then(response => response.json())
-.then(data => {
-    let longetitude = data.coord.lon;
-    let latitude = data.coord.lat;
-    let forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longetitude+'&units=imperial&appid='+apiKey;
-    return fetch(forecastURL);
-})
-.then(response => response.json())
-.then(data => {
-    for(i=0; i<6; i++) {
-        $("#day"+(i+2)+"Hum").text("Humidity: " + Number(data.list[i].main.humidity) + "%");   
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+2)+"Wind").text("Wind Speed: " + Number(data.list[i].wind.speed).toFixed(0) + "MPH");   
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+2)+"Min").text("Min: " + Number(data.list[i].main.temp_min).toFixed(1) + "°F");   
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+2)+"Max").text("Max: " + Number(data.list[i].main.temp_max).toFixed(1) + "°F");   
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+2)+"Weather").text(data.list[i].weather[0].main + ': ');
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+2)+"Img").attr('src','http://openweathermap.org/img/wn/'+ data.list[i].weather[0].icon + '.png');
-    }
-});
+    fetch(cityURL)
+        .then(response => response.json())
+        .then(data => {
+            let longetitude = data.coord.lon;
+            let latitude = data.coord.lat;
+            let forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + latitude + '&lon=' + longetitude + '&units=imperial&appid=' + apiKey;
+            return fetch(forecastURL);
+        })
+        .then(response => response.json())
+        .then(data => {
+            for (i = 0; i < 6; i++) {
+                $("#day" + (i + 2) + "Hum").text("Humidity: " + Number(data.list[i].main.humidity) + "%");
+            }
+            for (i = 0; i < 6; i++) {
+                $("#day" + (i + 2) + "Wind").text("Wind Speed: " + Number(data.list[i].wind.speed).toFixed(0) + "MPH");
+            }
+            for (i = 0; i < 6; i++) {
+                $("#day" + (i + 2) + "Min").text("Min: " + Number(data.list[i].main.temp_min).toFixed(1) + "°F");
+            }
+            for (i = 0; i < 6; i++) {
+                $("#day" + (i + 2) + "Max").text("Max: " + Number(data.list[i].main.temp_max).toFixed(1) + "°F");
+            }
+            for (i = 0; i < 6; i++) {
+                $("#day" + (i + 2) + "Weather").text(data.list[i].weather[0].main + ': ');
+            }
+            for (i = 0; i < 6; i++) {
+                $("#day" + (i + 2) + "Img").attr('src', 'http://openweathermap.org/img/wn/' + data.list[i].weather[0].icon + '.png');
+            }
+        });
 }
-
-searchHistory ();
 
 // Variables and inputs for each day//
 let Day1 = dayjs().format('dddd, MM/DD/YYYY');
@@ -134,7 +141,7 @@ $('#Day4').text(Day4);
 $('#Day5').text(Day5);
 $('#Day6').text(Day6);
 
-function imageDisplay () {
+function imageDisplay() {
     document.getElementById("day1Img").style.display = "block";
     document.getElementById("day2Img").style.display = "block";
     document.getElementById("day3Img").style.display = "block";

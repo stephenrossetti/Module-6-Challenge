@@ -19,6 +19,10 @@ img {
     display: none;
 }
 
+#savedSearchesTitle {
+    display: none;
+}
+
 #incorrectCity {
     display: none;
     color: red;
