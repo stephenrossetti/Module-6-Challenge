@@ -3,43 +3,131 @@ let apiKey = "15785ac3bfa5f8d614a115761164b031";
 let savedSearchList = [];
 
 // testing variables to hide when done//
-let testAPI = "https://api.openweathermap.org/data/2.5/forecast?lat=44.9772995&lon=-93.2654692&appid=15785ac3bfa5f8d614a115761164b031";
-let latitude = "44.9772995";
-let longetitude = "-93.2654692"
+// let testAPI = "https://api.openweathermap.org/data/2.5/forecast?lat=44.9772995&lon=-93.2654692&units=imperial&appid=15785ac3bfa5f8d614a115761164b031";
 
+let cityName = '';
+let cityURL = '';
+let listContainer = $('.SearchContainer');
+let searchHistoryList = JSON.parse(localStorage.getItem('searchHistory')) || [];
 // local storage and list for saved searches //
 
-let savedSearch = function(cityName) {
-    $('.btn btn-success:contains("'+ cityName + '")').remove();
-    
-    let SearchInput = $('<p>');
-    SearchInput.addClass('btn btn-success');
-    SearchInput.text(cityName);
-
-    let SearchContainer = $('.SearchContainer');
-    SearchContainer.append(SearchInput);
-
-    if (savedSearchList.length > 0) {
-        let previousSavedSearches = localStorage.getItem("savedSearches");
-        savedSearches = JSON.parse(previousSavedSearches);
+function searchHistoryInputs (city) {
+    if (!searchHistoryList.includes(city)) {
+        searchHistoryList.push(city);
+        localStorage.setItem('searchHistory',JSON.stringify(searchHistoryList));
+        searchHistory();
     }
 
-    savedSearches.push(cityName);
-    localStorage.setItem("savedSeaches", JSON.stringify(savedSearches));
+} 
 
-    $('#cityInput').val('');
+function searchHistory (){
+    listContainer.innerHTML = '';
+    searchHistoryList.forEach(function(city) {
+    let listItem = $('<p>');
+    listItem.addClass('btn btn-success');
+    listItem.text(city);
+
+    SearchContainer.append(listItem);
+
+    listItem.on("click", function (){
+        reset();
+        forecastInput();
+    })
+    })
+}
+
+$('#cityButton').on("click", function() {
+    event.preventDefault();
+    cityName = $('#cityInput').val();
+    cityURL = 'https://api.openweathermap.org/data/2.5/weather?q='+ cityName +'&appid='+ apiKey;
+    console.log(cityName);
+    $('#result-text').text(cityName);
+    reset();
+    forecastInput();
+    imageDisplay();
+    searchHistoryInputs();
+})
+
+function error(){
+    document.getElementById("incorrectCity").style.display = "block";
+    document.getElementById("contentBlock").style.display = "none";
+    document.getElementById("5dayfcst").style.display = "none";
+}
+
+function reset(){
+    document.getElementById("contentBlock").style.display = "block";
+    document.getElementById("incorrectCity").style.display = "none";
+    document.getElementById("5dayfcst").style.display = "block";
 }
 
 
-let cityName = 'Minneapolis';
+function forecastInput() {
+
+fetch(cityURL)
+.then(function (response) {
+    if(response.status != 200){
+        console.log("Not a City!");
+        error();
+    } else{
+        return response.json();
+    }
+})
+.then(data => {
+    let longetitude = data.coord.lon;
+    let latitude = data.coord.lat;
+    let currentURL = 'https://api.openweathermap.org/data/2.5/weather?lat='+latitude+'&lon='+longetitude+'&units=imperial&appid='+apiKey;
+    return fetch(currentURL);
+})
+.then(response => response.json())
+.then(data => {
+        $("#day1Hum").text("Humidity: " + Number(data.main.humidity) + "%");   
+        $("#day1Wind").text("Wind Speed: " + Number(data.wind.speed).toFixed(0) + "MPH");   
+        $("#day1Min").text("Min: " + Number(data.main.temp_min).toFixed(1) + "°F");   
+        $("#day1Max").text("Max: " + Number(data.main.temp_max).toFixed(1) + "°F");   
+        $("#day1Weather").text(data.weather[0].main + ': ');
+        $("#day1Img").attr('src','http://openweathermap.org/img/wn/'+ data.weather[0].icon + '.png');
+})
+
+fetch(cityURL)
+.then(response => response.json())
+.then(data => {
+    let longetitude = data.coord.lon;
+    let latitude = data.coord.lat;
+    let forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longetitude+'&units=imperial&appid='+apiKey;
+    return fetch(forecastURL);
+})
+.then(response => response.json())
+.then(data => {
+    for(i=0; i<6; i++) {
+        $("#day"+(i+2)+"Hum").text("Humidity: " + Number(data.list[i].main.humidity) + "%");   
+    }
+    for(i=0; i<6; i++) {
+        $("#day"+(i+2)+"Wind").text("Wind Speed: " + Number(data.list[i].wind.speed).toFixed(0) + "MPH");   
+    }
+    for(i=0; i<6; i++) {
+        $("#day"+(i+2)+"Min").text("Min: " + Number(data.list[i].main.temp_min).toFixed(1) + "°F");   
+    }
+    for(i=0; i<6; i++) {
+        $("#day"+(i+2)+"Max").text("Max: " + Number(data.list[i].main.temp_max).toFixed(1) + "°F");   
+    }
+    for(i=0; i<6; i++) {
+        $("#day"+(i+2)+"Weather").text(data.list[i].weather[0].main + ': ');
+    }
+    for(i=0; i<6; i++) {
+        $("#day"+(i+2)+"Img").attr('src','http://openweathermap.org/img/wn/'+ data.list[i].weather[0].icon + '.png');
+    }
+});
+}
+
+searchHistory ();
+
+// Variables and inputs for each day//
 let Day1 = dayjs().format('dddd, MM/DD/YYYY');
 let Day2 = dayjs().add(1, 'day').format('dddd, MM/DD/YYYY');
 let Day3 = dayjs().add(2, 'day').format('dddd, MM/DD/YYYY');
 let Day4 = dayjs().add(3, 'day').format('dddd, MM/DD/YYYY');
 let Day5 = dayjs().add(4, 'day').format('dddd, MM/DD/YYYY');
 let Day6 = dayjs().add(5, 'day').format('dddd, MM/DD/YYYY');
-
-$('#result-text').text(cityName);
 
 $('#Day1').text(Day1);
 $('#Day2').text(Day2);
@@ -48,30 +136,11 @@ $('#Day4').text(Day4);
 $('#Day5').text(Day5);
 $('#Day6').text(Day6);
 
-fetch('https://api.openweathermap.org/data/2.5/forecast?lat='+latitude+'&lon='+longetitude+'&appid='+apiKey)
-.then(response => response.json())
-.then(data => {
-    for(i=0; i<6; i++) {
-        $("#day"+(i+1)+"Hum").text("Humidity: " + Number(data.list[i].main.humidity) + "%");   
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+1)+"Wind").text("Wind Speed: " + Number(data.list[i].wind.speed).toFixed(0) + "MPH");   
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+1)+"Min").text("Min: " + Number((data.list[i].main.temp_min-273.15)*1.8+32).toFixed(1) + "°F");   
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+1)+"Max").text("Max: " + Number((data.list[i].main.temp_max-273.15)*1.8+32).toFixed(1) + "°F");   
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+1)+"Weather").text(data.list[i].weather[0].main + ': ');
-    }
-    for(i=0; i<6; i++) {
-        $("#day"+(i+1)+"Img").attr('src','http://openweathermap.org/img/wn/'+ data.list[i].weather[0].icon + '.png');
-    }
-});
-
-//Temperatures are on a 3 hr schedule adn not daily...//
-//Select city to be inputted. City -> longetitude + lattitudde -> API//
-// save data in local storage//
-//display none until first click//
+function imageDisplay () {
+    document.getElementById("day1Img").style.display = "block";
+    document.getElementById("day2Img").style.display = "block";
+    document.getElementById("day3Img").style.display = "block";
+    document.getElementById("day4Img").style.display = "block";
+    document.getElementById("day5Img").style.display = "block";
+    document.getElementById("day6Img").style.display = "block";
+}
