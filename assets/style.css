@@ -26,6 +26,10 @@ img {
     color: red;
 }
 
+#savedSearchesTitle {
+    display: none;
+}
+
 #day1Img {
     width: 10%;
     height: 10%;
