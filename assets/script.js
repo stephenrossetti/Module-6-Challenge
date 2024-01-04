@@ -35,6 +35,9 @@ function searchHistory() {
         listItem.text(cityName);
         listContainer.append(listItem);
         listItem.on("click", function () {
+            cityName = $(this).text();
+            cityURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityName + '&appid=' + apiKey;
+            console.log(cityURL);
             reset();
             forecastInput();
         })
