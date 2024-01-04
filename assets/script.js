@@ -116,24 +116,15 @@ function forecastInput() {
         })
         .then(response => response.json())
         .then(data => {
-            for (i = 0; i < 6; i++) {
-                $("#day" + (i + 2) + "Hum").text("Humidity: " + Number(data.list[i].main.humidity) + "%");
-            }
-            for (i = 0; i < 6; i++) {
-                $("#day" + (i + 2) + "Wind").text("Wind Speed: " + Number(data.list[i].wind.speed).toFixed(0) + "MPH");
-            }
-            for (i = 0; i < 6; i++) {
-                $("#day" + (i + 2) + "Min").text("Min: " + Number(data.list[i].main.temp_min).toFixed(1) + "°F");
-            }
-            for (i = 0; i < 6; i++) {
-                $("#day" + (i + 2) + "Max").text("Max: " + Number(data.list[i].main.temp_max).toFixed(1) + "°F");
-            }
-            for (i = 0; i < 6; i++) {
-                $("#day" + (i + 2) + "Weather").text(data.list[i].weather[0].main + ': ');
-            }
-            for (i = 0; i < 6; i++) {
-                $("#day" + (i + 2) + "Img").attr('src', 'http://openweathermap.org/img/wn/' + data.list[i].weather[0].icon + '.png');
-            }
+            for (i = 0; i < 24; i= i + 8) {
+                for(j = 0; j <6; j++) {
+                $("#day" + (j + 2) + "Hum").text("Humidity: " + Number(data.list[i].main.humidity) + "%");
+                $("#day" + (j + 2) + "Wind").text("Wind Speed: " + Number(data.list[i].wind.speed).toFixed(0) + "MPH");
+                $("#day" + (j + 2) + "Min").text("Min: " + Number(data.list[i].main.temp_min).toFixed(1) + "°F");
+                $("#day" + (j + 2) + "Max").text("Max: " + Number(data.list[i].main.temp_max).toFixed(1) + "°F");
+                $("#day" + (j + 2) + "Weather").text(data.list[i].weather[0].main + ': ');
+                $("#day" + (j + 2) + "Img").attr('src', 'http://openweathermap.org/img/wn/' + data.list[i].weather[0].icon + '.png');
+                }}
         });
 }
 
