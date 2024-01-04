@@ -116,8 +116,10 @@ function forecastInput() {
         })
         .then(response => response.json())
         .then(data => {
+            //added an i+8 for loop since data is in 3 hour incremements. This allows for each day to be pulled at same time 24 hours from now//
             for (i = 0; i < 24; i= i + 8) {
                 for(j = 0; j <6; j++) {
+                    //this for loop is just for appending text to each day in HTML//
                 $("#day" + (j + 2) + "Hum").text("Humidity: " + Number(data.list[i].main.humidity) + "%");
                 $("#day" + (j + 2) + "Wind").text("Wind Speed: " + Number(data.list[i].wind.speed).toFixed(0) + "MPH");
                 $("#day" + (j + 2) + "Min").text("Min: " + Number(data.list[i].main.temp_min).toFixed(1) + "°F");

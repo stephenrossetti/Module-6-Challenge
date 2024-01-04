@@ -29,4 +29,6 @@ Used the 5 Day Weather Forecast to retrieve weather data for cities. The base UR
 
 Used Bootstrap to format HTML and CSS.
 
-Utilized coding help from Stack Overflow for suggested code snippets and efficiencies (using for loops for 5-day forecast) as well as AskBCS Learning Assistant for localStorage help.
+Utilized coding help from Stack Overflow for suggested code snippets and efficiencies (using for loops for 5-day forecast)
+Used AskBCS Learning Assistant for localStorage help.
+Used TA for help on for loop i+8 to get each day instead of 3-hour increments.
